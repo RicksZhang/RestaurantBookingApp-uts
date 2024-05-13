@@ -6,11 +6,11 @@ Grubseat is developed based on Swift UI. Its main function is to realize user re
 
 ![App enterence]([RestaurantRADEME/Simulator Screenshot - iPhone 15 Pro - 2024-05-13 at 17.07.16.png](https://github.com/RicksZhang/RestaurantBookingApp-uts/blob/main/RestaurantRADEME/Simulator%20Screenshot%20-%20iPhone%2015%20Pro%20-%202024-05-13%20at%2017.07.16.png))
 
-Software Requirements
+## Software Requirements
 
 iOS version 17.0
 
 Xcode version 15.2
 
-Made by:
+## Made by:
 Mingxuan Zhang 14189866
