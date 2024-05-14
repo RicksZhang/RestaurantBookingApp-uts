@@ -17,10 +17,11 @@ struct RegisterView: View {
     @Binding var isRegistering: Bool
 
     var body: some View {
+        //背景色
         ZStack {
             LinearGradient(gradient: Gradient(colors: [Color.blue, Color.purple]), startPoint: .topLeading, endPoint: .bottomTrailing)
                 .edgesIgnoringSafeArea(.all)
-
+            //view 主体
             VStack(spacing: 20) {
                 Spacer()
 
@@ -51,7 +52,7 @@ struct RegisterView: View {
                     .cornerRadius(10)
                     .padding(.horizontal, 24)
 
-                Button(action: {
+                Button(action: {    //注册function
                     register()
                 }) {
                     Text("Register")
@@ -89,7 +90,7 @@ struct RegisterView: View {
             return
         }
 
-        UserDefaults.standard.set(username, forKey: "username")
+        UserDefaults.standard.set(username, forKey: "username")   //注册信息存储，login view调用
         UserDefaults.standard.set(email, forKey: "email")
         UserDefaults.standard.set(password, forKey: "password")
 

@@ -18,7 +18,7 @@ struct RestaurantView: View {
     @State private var alertTitle = ""
     @State private var alertMessage = ""
     @Environment(\.modelContext) var modelContext
-    var item: Item
+    var item: Item    //传入的 Item 对象，包含餐厅的详细信息，如菜单和价格
     
     var body: some View {
         ZStack {
@@ -26,7 +26,7 @@ struct RestaurantView: View {
                 .edgesIgnoringSafeArea(.all)
             
             VStack {
-                Form {
+                Form {    //表单
                     Section(header: Text("Reservation Information")
                         .font(.title)
                         .foregroundColor(.brown)) {
@@ -38,14 +38,14 @@ struct RestaurantView: View {
                             TextField("Number of People", text: $numberOfPeople)
                                 .keyboardType(.numberPad)
                                 .textFieldStyle(RoundedBorderTextFieldStyle())
-                            DatePicker("Reservation Date", selection: $selectedDate, displayedComponents: .date)
+                            DatePicker("Reservation Date", selection: $selectedDate, displayedComponents: .date)   //日期选择
                                 .datePickerStyle(GraphicalDatePickerStyle())
                         }
                     
                     Section(header: Text("Restaurant Food List")) {
                         List {
-                            ForEach(0..<item.foodImagelist.count, id: \.self) { index in
-                                NavigationLink(destination: ProductDetailsView(product: FoodItem(name: item.foodname[index], price: item.pricelist[index], image: item.foodImagelist[index], quantity: 1))) {
+                            ForEach(0..<item.foodImagelist.count, id: \.self) { index in    //生成从 0 到 item.foodImagelist.count（不包括 count）的整数序列
+                                NavigationLink(destination: ProductDetailsView(product: FoodItem(name: item.foodname[index], price: item.pricelist[index], image: item.foodImagelist[index], quantity: 1))) {      //显示被点击的菜品
                                     HStack(alignment: .top) {
                                         Image(item.foodImagelist[index])
                                             .resizable()
@@ -67,21 +67,30 @@ struct RestaurantView: View {
                 .listStyle(GroupedListStyle())
                 .navigationTitle("Seat Booking")
             }
-            .toolbar {
+            .toolbar {   //submit按键
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Submit") {
+                    Button(action: {
                         submitForm()
+                    }) {
+                        Text("Submit")
+                            .font(.system(size: 18, weight: .semibold))
+                            .foregroundColor(.white)
+                            .padding(.horizontal, 20)
+                            .padding(.vertical, 10)
+                            .background(Color(.systemBlue))
+                            .clipShape(Capsule())
+                            .shadow(color: Color(.systemBlue).opacity(0.3), radius: 5, x: 0, y: 5)
                     }
                 }
             }
-            .alert(isPresented: $showingAlert) {
+            .alert(isPresented: $showingAlert) {     //警告弹窗
                 Alert(title: Text(alertTitle), message: Text(alertMessage), dismissButton: .default(Text("OK")) {
                     clearFields()
                 })
             }
         }
     }
-    func submitForm() {
+    func submitForm() {    // 验证表单，显示相应警告，保存数据
         if name.isEmpty || phoneNumber.isEmpty || numberOfPeople.isEmpty {
             alertTitle = "Missing Information"
             alertMessage = "Please fill in all fields."
@@ -94,10 +103,10 @@ struct RestaurantView: View {
            
             if let _ = Int(numberOfPeople) {
                
-                let dateFormatter = DateFormatter()
+                let dateFormatter = DateFormatter()     //日期格式化
                 dateFormatter.dateStyle = .short
                 dateFormatter.timeStyle = .short
-                let currentDateAndTime = dateFormatter.string(from: Date())
+                let currentDateAndTime = dateFormatter.string(from: Date())    //保存数据
                 
    
                 alertTitle = "Reservation Successful"
@@ -116,7 +125,7 @@ struct RestaurantView: View {
         }
     }
 
-    func clearFields() {
+    func clearFields() {     //清空重置表单，当提交表单后
         name = ""
         phoneNumber = ""
         numberOfPeople = ""
@@ -125,9 +134,9 @@ struct RestaurantView: View {
     
     func saveData(Time: String, Name: String, Phone: String, Status: String,numberofpeople:String) {
         
-        var newBooking = RestaurantDB(restaurantName: item.title, name: Name, phone: Phone, numberofpeople: numberofpeople, status: "success", time: Time)
+        var newBooking = RestaurantDB(restaurantName: item.title, name: Name, phone: Phone, numberofpeople: numberofpeople, status: "success", time: Time)     //将参数传入db
     
-        modelContext.insert(newBooking)
+        modelContext.insert(newBooking)    //插入数据
     }
     
     

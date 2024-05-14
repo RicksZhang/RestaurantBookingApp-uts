@@ -105,11 +105,13 @@ struct FoodListView: View {
     }
 }
 
+
 struct MenuItemView: View {
     let item: FoodItem
     let addToCart: (FoodItem, Int) -> Void
     
     @State private var quantity: Int = 1
+    @State private var isAnimating = false
     
     var body: some View {
         HStack(alignment: .top, spacing: 16) {
@@ -132,14 +134,25 @@ struct MenuItemView: View {
                     .padding(.vertical, 8)
                 
                 Button(action: {
-                    addToCart(item, quantity)
-                }) {
+                                    addToCart(item, quantity)
+                                    withAnimation {
+                                        isAnimating = true
+                                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                                            withAnimation {
+                                                isAnimating = false
+                                            }
+                                        }
+                                    }
+                                }) {
                     Text("Add to Cart")
-                        .foregroundColor(.white)
-                        .padding(.horizontal, 16)
-                        .padding(.vertical, 8)
-                        .background(LinearGradient(gradient: Gradient(colors: [Color.orange, Color.red]), startPoint: .leading, endPoint: .trailing))
-                        .cornerRadius(10)
+                                           .foregroundColor(.white)
+                                           .padding(.horizontal, 16)
+                                           .padding(.vertical, 8)
+                                           .background(LinearGradient(gradient: Gradient(colors: [Color.orange, Color.red]), startPoint: .leading, endPoint: .trailing))
+                                           .cornerRadius(10)
+                                           .scaleEffect(isAnimating ? 1.2 : 1.0)
+                                                                   .rotationEffect(isAnimating ? .degrees(360) : .degrees(0))
+                                                                   .opacity(isAnimating ? 0.5 : 1.0)
                 }
             }
         }

@@ -9,12 +9,13 @@ import SwiftUI
 import SwiftData
 
 struct ViewBookingListView: View {
-    @Query private var bookings: [RestaurantDB]
-    @Environment(\.modelContext) private var modelContext
+    @Query private var bookings: [RestaurantDB]  //查找restaurantDB中的bookings数组
+    @Environment(\.modelContext) private var modelContext  //注入 modelContext，操控context
 
+    //
     var body: some View {
         NavigationView {
-            List(bookings.filter { $0.status == "success" }, id: \.restaurantName) { booking in
+            List(bookings.filter { $0.status == "success" }, id: \.restaurantName) { booking in    // 为每个符合条件的booking创建视图，对booking过滤，只显示success的，id增加列表唯一性
                 ZStack {
                     RoundedRectangle(cornerRadius: 10)
                         .fill(Color(UIColor.systemBackground))
@@ -63,7 +64,7 @@ struct ViewBookingListView: View {
         }
     }
 
-    func cancelBooking(_ booking: RestaurantDB) {
+    func cancelBooking(_ booking: RestaurantDB) {  //接受一个 RestaurantDB 实例，并将其状态更改为 "failed"，改变数据库
         booking.status = "failed"
         do {
             try modelContext.save()
