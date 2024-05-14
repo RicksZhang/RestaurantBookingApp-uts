@@ -8,25 +8,25 @@
 import SwiftUI
 
 struct ShoppingCartView: View {
-    @EnvironmentObject var cartManager: ShoppingCartManagement
-    @State private var isAlertShown = false
-    @EnvironmentObject var purchaseRecord: PurchaseRecord
+    @EnvironmentObject var cartManager: ShoppingCartManagement     //从环境中接入一个购物车管理对象，这允许视图访问和修改购物车内容
+    @State private var isAlertShown = false                        //控制购买确认警告的显示状态
+    @EnvironmentObject var purchaseRecord: PurchaseRecord          //记录购买历史
 
     var body: some View {
         NavigationView {
             VStack {
-                if cartManager.products.isEmpty {
+                if cartManager.products.isEmpty {     //显示购物车为空的信息
                     Spacer()
                     Text("Your cart is empty")
                         .font(.title2)
                         .foregroundColor(.secondary)
                     Spacer()
                 } else {
-                    cartItemsList
-                    purchaseSection
+                    cartItemsList        //列表显示购物车项
+                    purchaseSection      //显示总价和结账按钮
                 }
             }
-            .navigationTitle("Shopping Cart")
+            .navigationTitle("Shopping Cart")     //购买确认警告
             .alert(isPresented: $isAlertShown) {
                 Alert(
                     title: Text("Purchase Confirmed"),
@@ -39,8 +39,8 @@ struct ShoppingCartView: View {
         }
     }
 
-    private var cartItemsList: some View {
-        List {
+    private var cartItemsList: some View {       //购物车产品列表
+        List {      //遍历产品
             ForEach(cartManager.products.indices, id: \.self) { index in
                 let product = cartManager.products[index]
                 CartItemView(product: product, removeAction: {
@@ -51,13 +51,13 @@ struct ShoppingCartView: View {
         .listStyle(PlainListStyle())
     }
 
-    private var purchaseSection: some View {
+    private var purchaseSection: some View {      //结账
         VStack(spacing: 16) {
             Text("Total Cost: $\(totalPrice)")
                 .font(.title2)
                 .foregroundColor(.primary)
 
-            Button(action: handlePurchase) {
+            Button(action: handlePurchase) {       //触发handlepurchase
                 Text("Checkout")
                     .font(.headline)
                     .foregroundColor(.white)
@@ -73,7 +73,7 @@ struct ShoppingCartView: View {
         .shadow(radius: 5)
     }
 
-    private func handlePurchase() {
+    private func handlePurchase() {    //记录购买信息，清空购物车，显示确认警告
         let currentDate = Date()
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
@@ -89,7 +89,7 @@ struct ShoppingCartView: View {
                 price: Double(product.price),
                 image: product.image
             )
-            purchaseRecord.orders.append(orderItem)
+            purchaseRecord.orders.append(orderItem)     //使用purchase model中的orders记录，向 purchaseRecord 中的 orders 数组添加一个新的元素 orderItem
         }
 
         isAlertShown = true
@@ -97,12 +97,12 @@ struct ShoppingCartView: View {
         print("Completing purchase...")
     }
 
-    private var totalPrice: Int {
+    private var totalPrice: Int {       //价格计算方式
         cartManager.products.reduce(0) { $0 + ($1.price * $1.quantity) }
     }
 }
 
-struct CartItemView: View {
+struct CartItemView: View {       //购物车view
     let product: FoodItem
     let removeAction: () -> Void
 

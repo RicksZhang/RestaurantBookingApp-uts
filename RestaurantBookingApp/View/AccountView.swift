@@ -9,13 +9,13 @@
 import SwiftUI
 
 struct AccountView: View {
-    @Environment(\.presentationMode) var presentationMode
+    @Environment(\.presentationMode) var presentationMode    //控制视图的显示和隐藏
     
-    let name = UserDefaults.standard.string(forKey: "name") ?? "User"
-    let email = UserDefaults.standard.string(forKey: "email") ?? "user@example.com"
+    let name = UserDefaults.standard.string(forKey: "name") ?? "User"     //读取用户名字
+    let email = UserDefaults.standard.string(forKey: "email") ?? "user@example.com"     //读取用户email
     
     var body: some View {
-        NavigationView {
+        NavigationView {       //嵌套导航视图
             VStack(spacing: 20) {
                 Image("person")
                     .resizable()
@@ -38,7 +38,7 @@ struct AccountView: View {
                 
                 Divider()
                 
-                NavigationLink(destination: ViewBookingListView()) {
+                NavigationLink(destination: ViewBookingListView()) {     //点击导航至ViewBookingListView
                     Text("View Bookings")
                         .foregroundColor(.white)
                         .font(.headline)
